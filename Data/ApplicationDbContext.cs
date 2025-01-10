@@ -11,5 +11,8 @@ namespace SMIS2025.Data
         {
         }
         public DbSet<SMIS2025.Models.Department> Department { get; set; } = default!;
+        public DbSet<SMIS2025.Models.Subject> Subject { get; set; } = default!;
+        public DbSet<SMIS2025.Models.Grade> Grade { get; set; } = default!;
+
     }
 }

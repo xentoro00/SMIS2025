@@ -10,22 +10,23 @@ using SMIS2025.Models;
 
 namespace SMIS2025.Controllers
 {
-    public class DepartmentsController : Controller
+    public class SubjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public DepartmentsController(ApplicationDbContext context)
+        public SubjectsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Departments
+        // GET: Subjects
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Department.ToListAsync());
+            var applicationDbContext = _context.Subject.Include(s => s.Department);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Departments/Details/5
+        // GET: Subjects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,47 +34,49 @@ namespace SMIS2025.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department
+            var subject = await _context.Subject
+                .Include(s => s.Department)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (department == null)
+            if (subject == null)
             {
                 return NotFound();
             }
 
-            return View(department);
+            return View(subject);
         }
 
-        // GET: Departments/Create
+        // GET: Subjects/Create
         public IActionResult Create()
         {
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "Id", "Name");
             return View();
         }
 
-        // POST: Departments/Create
+        // POST: Subjects/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Department department)
+        public async Task<IActionResult> Create([Bind("Id,Code,Name,ETCs,DepartmentId,Category")] Subject subject)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(department);
+                // Log the subject data before adding it to the context
+                Console.WriteLine($"Subject di: {subject.Id}");
+                Console.WriteLine($"Subject Name: {subject.Name}");
+                Console.WriteLine($"Subject ETCs: {subject.ETCs}");
+                Console.WriteLine($"Subject Category: {subject.Category}");
+                Console.WriteLine($"DepartmentId: {subject.DepartmentId}");
+
+                _context.Add(subject);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            else
-            {
-                // Log model state errors
-                foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                {
-                    Console.WriteLine(error.ErrorMessage);
-                }
-            }
-            return View(department);
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "Id", "Name", subject.DepartmentId);
+            return View(subject);
         }
 
-        // GET: Departments/Edit/5
+        // GET: Subjects/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,22 +84,23 @@ namespace SMIS2025.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department.FindAsync(id);
-            if (department == null)
+            var subject = await _context.Subject.FindAsync(id);
+            if (subject == null)
             {
                 return NotFound();
             }
-            return View(department);
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "Id", "Name", subject.DepartmentId);
+            return View(subject);
         }
 
-        // POST: Departments/Edit/5
+        // POST: Subjects/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Department department)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Name,ETCs,DepartmentId,Category")] Subject subject)
         {
-            if (id != department.Id)
+            if (id != subject.Id)
             {
                 return NotFound();
             }
@@ -105,12 +109,12 @@ namespace SMIS2025.Controllers
             {
                 try
                 {
-                    _context.Update(department);
+                    _context.Update(subject);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DepartmentExists(department.Id))
+                    if (!SubjectExists(subject.Id))
                     {
                         return NotFound();
                     }
@@ -121,10 +125,11 @@ namespace SMIS2025.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(department);
+            ViewData["DepartmentId"] = new SelectList(_context.Department, "Id", "Name", subject.DepartmentId);
+            return View(subject);
         }
 
-        // GET: Departments/Delete/5
+        // GET: Subjects/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -132,34 +137,35 @@ namespace SMIS2025.Controllers
                 return NotFound();
             }
 
-            var department = await _context.Department
+            var subject = await _context.Subject
+                .Include(s => s.Department)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (department == null)
+            if (subject == null)
             {
                 return NotFound();
             }
 
-            return View(department);
+            return View(subject);
         }
 
-        // POST: Departments/Delete/5
+        // POST: Subjects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var department = await _context.Department.FindAsync(id);
-            if (department != null)
+            var subject = await _context.Subject.FindAsync(id);
+            if (subject != null)
             {
-                _context.Department.Remove(department);
+                _context.Subject.Remove(subject);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DepartmentExists(int id)
+        private bool SubjectExists(int id)
         {
-            return _context.Department.Any(e => e.Id == id);
+            return _context.Subject.Any(e => e.Id == id);
         }
     }
 }

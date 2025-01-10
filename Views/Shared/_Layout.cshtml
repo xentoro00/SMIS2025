@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="~/SMIS2025.styles.css" asp-append-version="true" />
     <style>
         .no-header {
-            display: none;
+            display: none !important;
 
         }
 
@@ -81,15 +81,15 @@
         </nav>
     </header>
     <div class="d-flex flex-row">
-    <div id="sidebar" class="d-flex flex-column p-3">
+        <div id="sidebar" class="d-flex flex-column p-3 @(Context.Request.Path == "/Identity/Account/Login" ? "no-header" : "")">
         <h5 class="text-center">Menu</h5>
         <hr>
         <ul class="nav flex-column">
             <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
             </li>
-            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Roles" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Role</a>
+                <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Grades" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Details">Grades</a>
             </li>
             <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Departments" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Departments" asp-action="Index">Department</a>
@@ -97,8 +97,8 @@
             <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Teachers" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
                 <a class="nav-link text-dark" asp-area="" asp-controller="Teachers" asp-action="Index">Teacher</a>
             </li>
-            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Courses" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
-                <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Course</a>
+            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Subjects" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                    <a class="nav-link text-dark" asp-area="" asp-controller="Subjects" asp-action="Index">Subject</a>
             </li>
         </ul>
     </div>

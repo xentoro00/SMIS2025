@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SMIS2025.Data;
 
@@ -11,9 +12,11 @@ using SMIS2025.Data;
 namespace SMIS2025.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250110211459_gradeId")]
+    partial class gradeId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,40 +278,6 @@ namespace SMIS2025.Data.Migrations
                     b.ToTable("Grade");
                 });
 
-            modelBuilder.Entity("SMIS2025.Models.Nota", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("GradeStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Letter")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("Nota");
-                });
-
             modelBuilder.Entity("SMIS2025.Models.Subject", b =>
                 {
                     b.Property<int>("Id")
@@ -394,15 +363,6 @@ namespace SMIS2025.Data.Migrations
                 });
 
             modelBuilder.Entity("SMIS2025.Models.Grade", b =>
-                {
-                    b.HasOne("SMIS2025.Models.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId");
-
-                    b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("SMIS2025.Models.Nota", b =>
                 {
                     b.HasOne("SMIS2025.Models.Subject", "Subject")
                         .WithMany()

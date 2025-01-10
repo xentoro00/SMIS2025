@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SMIS2025.Data;
+using SMIS2025.Areas.Identity.Data;
 
 #nullable disable
 
-namespace SMIS2025.Data.Migrations
+namespace SMIS2025.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(SMIS2025IdentityDbContext))]
+    partial class SMIS2025IdentityDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -241,74 +241,6 @@ namespace SMIS2025.Data.Migrations
                     b.ToTable("Department");
                 });
 
-            modelBuilder.Entity("SMIS2025.Models.Grade", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("GradeStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Letter")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("Grade");
-                });
-
-            modelBuilder.Entity("SMIS2025.Models.Nota", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("GradeStatus")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Letter")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("nvarchar(1)");
-
-                    b.Property<int>("Number")
-                        .HasColumnType("int");
-
-                    b.Property<string>("StudentId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("Nota");
-                });
-
             modelBuilder.Entity("SMIS2025.Models.Subject", b =>
                 {
                     b.Property<int>("Id")
@@ -325,7 +257,7 @@ namespace SMIS2025.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DepartmentId")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<double>("ETCs")
@@ -393,31 +325,20 @@ namespace SMIS2025.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SMIS2025.Models.Grade", b =>
-                {
-                    b.HasOne("SMIS2025.Models.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId");
-
-                    b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("SMIS2025.Models.Nota", b =>
-                {
-                    b.HasOne("SMIS2025.Models.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId");
-
-                    b.Navigation("Subject");
-                });
-
             modelBuilder.Entity("SMIS2025.Models.Subject", b =>
                 {
                     b.HasOne("SMIS2025.Models.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId");
+                        .WithMany("Subjects")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("SMIS2025.Models.Department", b =>
+                {
+                    b.Navigation("Subjects");
                 });
 #pragma warning restore 612, 618
         }

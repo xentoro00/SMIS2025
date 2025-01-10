@@ -1,0 +1,12 @@
+﻿@model IEnumerable<SMIS2025.Models.Grade>
+
+<h3>Grade Details</h3>
+@foreach (var grade in Model)
+{
+    <div>
+        <p><strong>Subject:</strong> @grade.Subject.Name</p>
+        <p><strong>Grade:</strong> @grade.Number @grade.Letter</p>
+        <p><strong>Status:</strong> @grade.GradeStatus</p>
+        <hr />
+    </div>
+}
