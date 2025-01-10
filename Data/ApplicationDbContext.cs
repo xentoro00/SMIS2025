@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using SMIS2025.Models;
 
 namespace SMIS2025.Data
 {
@@ -9,5 +10,6 @@ namespace SMIS2025.Data
             : base(options)
         {
         }
+        public DbSet<SMIS2025.Models.Department> Department { get; set; } = default!;
     }
 }

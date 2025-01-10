@@ -7,10 +7,59 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SMIS2025.styles.css" asp-append-version="true" />
+    <style>
+        .no-header {
+            display: none;
+
+        }
+
+        body {
+            display: flex;
+        }
+        .navbar{
+            background-color: #E8E8E8;
+        }
+        #sidebar {
+            min-width: 250px;
+            max-width: 250px;
+            height: fit-content;
+            background-color: #F4F4F4;
+            border: 1px solid #eee;
+            border-radius: .3rem;
+        }
+
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            color: #495057;
+            border-radius: .3rem;
+            margin-bottom: 5px;
+            text-decoration: none;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+            .nav-item:hover:not(.active) {
+                background-color: #D6D6D6;
+                color: #212529;
+            }
+
+            .nav-item.active {
+                background-color: #1ABC9C !important;
+            }
+
+        .collapse .nav-item {
+            padding-left: 20px;
+        }
+
+    </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+<body class="flex-column">
+    <header class="@(Context.Request.Path == "/Identity/Account/Login" ? "no-header" : "")">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom box-shadow mb-3">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SMIS2025</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -18,23 +67,76 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+                     <ul class="navbar-nav flex-grow-1"> 
+                    @*     <li class="nav-item"> *@
+                    @*         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a> *@
+                    @*     </li> *@
+                    @*     <li class="nav-item"> *@
+                    @*         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> *@
+                    @*     </li> *@
+                    </ul> 
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="d-flex flex-row">
+    <div id="sidebar" class="d-flex flex-column p-3">
+        <h5 class="text-center">Menu</h5>
+        <hr>
+        <ul class="nav flex-column">
+            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+            </li>
+            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Roles" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Roles" asp-action="Index">Role</a>
+            </li>
+            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Departments" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Departments" asp-action="Index">Department</a>
+            </li>
+            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Teachers" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Teachers" asp-action="Index">Teacher</a>
+            </li>
+            <li class="nav-item @(ViewContext.RouteData.Values["controller"]?.ToString() == "Courses" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Courses" asp-action="Index">Course</a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div id="content" class="container">
         <main role="main" class="pb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                </li>
+                @if (ViewContext.RouteData.Values["controller"]?.ToString() != "Home")
+                {
+                    @if (!string.IsNullOrEmpty(ViewContext.RouteData.Values["action"]?.ToString()) &&
+                   ViewContext.RouteData.Values["action"]?.ToString() != "Index")
+                    {
+                        <li class="breadcrumb-item">
+                            <a asp-area="" asp-controller="@ViewContext.RouteData.Values["controller"]" asp-action="Index">
+                                @ViewContext.RouteData.Values["controller"]
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            @ViewContext.RouteData.Values["action"]
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item">
+                            @ViewContext.RouteData.Values["controller"]
+                        </li>
+                    }
+
+                }
+
+            </ol>
             @RenderBody()
         </main>
+        </div>
     </div>
 
     <footer class="border-top footer text-muted">
